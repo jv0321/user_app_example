@@ -1,29 +1,46 @@
 const express = require('express')
+const path = require('path')
+
 
 const app = express()
 const PORT = 3333
 
 const data = [
     {
-        id: 1,
+        id: 234,
         name: 'JD',
         age: 44
     },
     {
-        id: 2, 
+        id: 1002, 
         name: 'Bob',
         age: 99
     },
     {
-        id: 3,
+        id: 555,
         name: 'Sarah',
         age: 40
     }
 ]
 
-app.get('/', (requestObj, responseObj) => {
-    responseObj.send('Hey from the server!')
+
+app.use(express.static('./public'))
+
+//Get api route to send back the array of users
+app.get('/api/users', (requestObj, responseObj) => {
+    responseObj.json(data)
 })
+
+app.get('/api/users/:id', (requestObj, responseObj) => {
+    const paramId = requestObj.params.id
+
+    const user = data.find(uObj => uObj.id == paramId)
+    responseObj.json(user || { message: 'User not found'})
+})
+
+// app.get('/', (requestObj, responseObj) => {
+//     responseObj.sendFile(path.join(__dirname, './public/index.html'))
+// })
 
 app.get('/api/:user_id', (requestObj, responseObj) => {
     const id = 1
